@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:infinityjobs_app/core/config/config.dart';
 import 'package:infinityjobs_app/core/widgetss/SnackBarHelper.dart';
+import 'package:infinityjobs_app/core/widgetss/checkinternetconnection.dart';
 import 'package:infinityjobs_app/core/widgetss/custom_painter_widget.dart';
 import 'package:infinityjobs_app/core/widgetss/custom_settings_row.dart';
+import 'package:infinityjobs_app/core/widgetss/no_internet_dailog.dart';
 import 'package:infinityjobs_app/screens/edit_profile_screen.dart';
 import 'package:infinityjobs_app/screens/infinify_work_screen.dart';
 import 'package:infinityjobs_app/screens/my_jobs_screen.dart';
@@ -82,9 +84,16 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   @override
   void initState() {
     super.initState();
+    _checkConnection();
     loadUserData();
     _loadPoints();
   }
+  Future<void> _checkConnection() async {
+    if (!await checkInternetConnection()) {
+      DialogUtils.showConnectionDialog(context);
+    }
+  }
+
 
 
   @override

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:infinityjobs_app/core/widgetss/checkinternetconnection.dart';
 import 'package:infinityjobs_app/core/widgetss/custom_appbar_widget.dart';
 import 'package:infinityjobs_app/core/widgetss/custom_formfield.dart';
 import 'package:infinityjobs_app/core/widgetss/custom_settings_row.dart';
 import 'package:infinityjobs_app/core/widgetss/formfield_autocomplte.dart';
+import 'package:infinityjobs_app/core/widgetss/no_internet_dailog.dart';
 import 'package:infinityjobs_app/core/widgetss/top_company.dart';
 import 'package:infinityjobs_app/models/Skill_locationData.dart';
 import 'package:infinityjobs_app/screens/search_result_screen.dart';
@@ -30,6 +32,13 @@ class _FindJobsScreenState extends State<FindJobsScreen> {
   void initState() {
     super.initState();
     _loadRecentSearches();
+    _checkConnection();
+  }
+
+  Future<void> _checkConnection() async {
+    if (!await checkInternetConnection()) {
+      DialogUtils.showConnectionDialog(context);
+    }
   }
 
   void _loadRecentSearches() async {

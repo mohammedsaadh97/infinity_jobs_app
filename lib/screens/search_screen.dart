@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:infinityjobs_app/core/notifiers/search_query_notifier.dart';
+import 'package:infinityjobs_app/core/widgetss/checkinternetconnection.dart';
 import 'package:infinityjobs_app/core/widgetss/job_card_widget.dart';
+import 'package:infinityjobs_app/core/widgetss/no_internet_dailog.dart';
 import 'package:infinityjobs_app/core/widgetss/search_bar.dart';
 import 'package:infinityjobs_app/core/widgetss/text_animation.dart';
 import 'package:infinityjobs_app/models/search_query_response.dart';
@@ -45,9 +47,19 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
+    _checkConnection();
     loadUserData();
 
+
   }
+
+
+  Future<void> _checkConnection() async {
+    if (!await checkInternetConnection()) {
+      DialogUtils.showConnectionDialog(context);
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {

@@ -19,14 +19,25 @@ class _TextAnimationWidgetState extends State<TextAnimationWidget> {
     "Your time is limited, don't waste it living someone else's life."
   ];
 
+  Timer? _timer; // Variable to keep track of the timer
+
+
   @override
   void initState() {
     super.initState();
-    Timer.periodic(Duration(seconds: 3), (Timer timer) {
-      setState(() {
-        _currentIndex = (_currentIndex + 1) % _texts.length;
-      });
+    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
+      if (mounted) { // Check if the widget is still in the tree
+        setState(() {
+          _currentIndex = (_currentIndex + 1) % _texts.length;
+        });
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel(); // Cancel the timer when disposing the state
+    super.dispose();
   }
 
   @override

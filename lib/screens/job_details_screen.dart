@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:infinityjobs_app/core/config/config.dart';
+import 'package:infinityjobs_app/core/widgetss/SnackBarHelper.dart';
 import 'package:infinityjobs_app/core/widgetss/bookmark_button.dart';
 import 'package:infinityjobs_app/core/widgetss/custom_appbar_widget.dart';
 import 'package:infinityjobs_app/core/widgetss/custom_settings_row.dart';
@@ -68,7 +69,6 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
           ad.dispose();
           interstitialAdAdmob = null;
           _isAdLoaded = false;
-          _decreasePoints();
         },
         onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
           print('$ad onAdFailedToShowFullScreenContent: $error');
@@ -82,21 +82,15 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
     }
   }
 
-  //enbale only one
-  void loadAds (){
-    createInterstitialAdAdmob();  //admob
-    //createInterstitialAdFb(); //fb
-  }
+
+
   _decreasePoints() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int points = (prefs.getInt('points') ?? 20);
 
     if (points == 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Points already at 0!'),
-        ),
-      );
+      SnackBarHelper.showSucessSnackBar(
+          context, "Points already at 0! Earn points to disable ads.");
       return; // No need to proceed further
     }
 
@@ -105,27 +99,38 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
     await prefs.setInt('points', points);
 
     if (points == 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Points decreased to 0!'),
-        ),
-      );
+      SnackBarHelper.showSucessSnackBar(
+          context, "Points have been reduced to 0! Earn points to disable ads.");
+
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Points decreased!'),
-        ),
-      );
+      SnackBarHelper.showSucessSnackBar(
+          context, "Points decreased! Remaining points: $points");
     }
   }
-
 
 
   @override
   void initState() {
     super.initState();
-    loadAds();
+    _decreasePoints();
+    _checkPointsAndLoadAds();
 
+  }
+
+  void _checkPointsAndLoadAds() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int points = prefs.getInt('points') ?? 0; // Assuming 0 points if not set
+
+    if (points == 0) {
+      loadAds();
+    }
+  }
+
+  void loadAds (){
+    // Only call createInterstitialAdAdmob if _isAdLoaded is false to avoid reloading the ad unnecessarily.
+    if (!_isAdLoaded) {
+      createInterstitialAdAdmob();  //admob
+    }
   }
 
   void _shareApp() {
