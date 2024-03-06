@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:image_picker/image_picker.dart';
+import 'package:infinityjobs_app/core/config/config.dart';
 import 'package:infinityjobs_app/core/widgetss/SnackBarHelper.dart';
 import 'package:infinityjobs_app/models/Skill_locationData.dart';
 import 'package:infinityjobs_app/screens/home_screen.dart';
 import 'package:infinityjobs_app/utilities/color_constant.dart';
 import 'package:infinityjobs_app/utilities/text_styles.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -471,9 +473,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Container(
               color: Colors.black.withOpacity(0.5),
               child: Center(
-                child: CircularProgressIndicator(
-                  color: ColorConstant.AppGreencolor,
-                ),
+                  child: Container(
+                      height: 100,
+                      width: 100,
+                      child: Lottie.asset(Config().adsLoading))
               ),
             ),
         ],

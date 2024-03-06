@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:infinityjobs_app/core/config/config.dart';
 import 'package:infinityjobs_app/core/widgetss/SnackBarHelper.dart';
 import 'package:infinityjobs_app/core/widgetss/custom_formfield.dart';
 import 'package:infinityjobs_app/utilities/color_constant.dart';
 import 'package:infinityjobs_app/utilities/text_styles.dart';
+import 'package:lottie/lottie.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   @override
@@ -162,7 +164,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             Container(
               color: Colors.black.withOpacity(0.5),
               child: Center(
-                child: CircularProgressIndicator(),
+                  child: Container(
+                      height: 100,
+                      width: 100,
+                      child: Lottie.asset(Config().adsLoading))
               ),
             ),
         ],

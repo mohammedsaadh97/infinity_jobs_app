@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:infinityjobs_app/core/config/config.dart';
 import 'package:infinityjobs_app/core/widgetss/SnackBarHelper.dart';
 import 'package:infinityjobs_app/core/widgetss/custom_formfield.dart';
 import 'package:infinityjobs_app/screens/login_screen.dart';
@@ -8,6 +9,7 @@ import 'package:infinityjobs_app/screens/profile_screen.dart';
 import 'package:infinityjobs_app/services/next_screen.dart';
 import 'package:infinityjobs_app/utilities/color_constant.dart';
 import 'package:infinityjobs_app/utilities/text_styles.dart';
+import 'package:lottie/lottie.dart';
 
 class RegisterScreen extends StatefulWidget {
   final Function(bool) onLogin;
@@ -264,9 +266,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
             Container(
               color: Colors.black.withOpacity(0.5),
               child: Center(
-                child: CircularProgressIndicator(
-                  color: ColorConstant.AppGreencolor,
-                ),
+                  child: Container(
+                      height: 100,
+                      width: 100,
+                      child: Lottie.asset(Config().adsLoading))
               ),
             ),
         ],
