@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:infinityjobs_app/core/config/config.dart';
 import 'package:infinityjobs_app/core/widgetss/SnackBarHelper.dart';
+import 'package:infinityjobs_app/core/widgetss/custom_painter_widget.dart';
 import 'package:infinityjobs_app/core/widgetss/custom_settings_row.dart';
 import 'package:infinityjobs_app/screens/edit_profile_screen.dart';
 import 'package:infinityjobs_app/screens/infinify_work_screen.dart';
 import 'package:infinityjobs_app/screens/my_jobs_screen.dart';
+import 'package:infinityjobs_app/screens/reward_points_screen.dart';
 import 'package:infinityjobs_app/services/authentication_wrapper.dart';
 import 'package:infinityjobs_app/services/next_screen.dart';
 import 'package:infinityjobs_app/utilities/app_constant.dart';
@@ -31,7 +33,29 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   String? _userImage;
   SharedPreferences? _prefs;
   String? _userId;
+  int points = 20;
+  int maxPoints = 100;
 
+  _loadPoints() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      points = (prefs.getInt('points') ?? 20);
+    });
+  }
+
+  _savePoints(int points) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('points', points);
+  }
+
+  void decreasePoints() {
+    setState(() {
+      if (points > 0) {
+        points--;
+        _savePoints(points);
+      }
+    });
+  }
   Future<void> loadUserData() async {
 
     _prefs = await SharedPreferences.getInstance();
@@ -59,7 +83,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   void initState() {
     super.initState();
     loadUserData();
-
+    _loadPoints();
   }
 
 
@@ -144,7 +168,41 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               ),
             ],
           ),
-          // FaIcon(FontAwesomeIcons.bell,color: ColorConstant.whiteshade ),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                width: 60,
+                height: 60,
+                child: InkWell(
+                  onTap: (){
+                    nextScreen(context, RewardPointsScreen()).then((_) {
+                      _loadPoints(); // Reload points after returning from RewardPointsScreen
+                    });
+                    //nextScreen(context, RewardPointsScreen());
+                  },
+                  child: CustomPaint(
+                    foregroundPainter: MyPainter(
+                      lineColor: Colors.grey,
+                      completeColor:  points / maxPoints <= 0.89 ? Colors.green : Colors.grey,
+                      completePercent:  points / maxPoints,
+                      width: 4.0,
+                    ),
+                    child: Center(
+                      child: Text(
+                        '$points/$maxPoints',
+                        style: TextStyle(
+                          fontSize: 12.0,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )
         ],
       ),
     );
@@ -169,6 +227,13 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
           SizedBox(height: 10.0,),
           ProfileListWidget(context,Icons.edit_note,"Edit Profile",() {
             nextScreen(context, EditProfileScreen(_userId!,_userEmail!));
+          },),
+          Divider(),
+          SizedBox(height: 10.0,),
+          ProfileListWidget(context,Icons.ads_click,"My Points",() {
+            nextScreen(context, RewardPointsScreen()).then((_) {
+              _loadPoints(); // Reload points after returning from RewardPointsScreen
+            });
           },),
           Divider(),
           SizedBox(height: 10.0,),

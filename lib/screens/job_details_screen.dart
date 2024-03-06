@@ -15,10 +15,9 @@ import 'package:infinityjobs_app/utilities/app_constant.dart';
 import 'package:infinityjobs_app/utilities/color_constant.dart';
 import 'package:infinityjobs_app/utilities/text_styles.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/link.dart';
 
-
-const String testDevice = 'ca-app-pub-4606161306309941~3698276781';
 const int maxFailedLoadAttempts = 3;
 
 class JobDetailsScreen extends StatefulWidget {
@@ -30,77 +29,8 @@ class JobDetailsScreen extends StatefulWidget {
 }
 
 class _JobDetailsScreenState extends State<JobDetailsScreen> {
-  BannerAd? _bannerAd;
-  bool _bannerAdIsLoaded = false;
+  // Admob Ads -- START --
 
-  static const AdRequest request = AdRequest(
-    keywords: <String>['foo', 'bar'],
-    contentUrl: 'http://foo.com/bar.html',
-    nonPersonalizedAds: true,
-  );
-
-  InterstitialAd? _interstitialAd;
-  int _numInterstitialLoadAttempts = 0;
-
-  RewardedAd? _rewardedAd;
-  int _numRewardedLoadAttempts = 0;
-
-  RewardedInterstitialAd? _rewardedInterstitialAd;
-  int _numRewardedInterstitialLoadAttempts = 0;
-
-  void _showInterstitialAd() {
-    if (_interstitialAd == null) {
-      print('Warning: attempt to show interstitial before loaded.');
-      return;
-    }
-    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (InterstitialAd ad) =>
-          print('ad onAdShowedFullScreenContent.'),
-      onAdDismissedFullScreenContent: (InterstitialAd ad) {
-        print('$ad onAdDismissedFullScreenContent.');
-        ad.dispose();
-        _createInterstitialAd();
-      },
-      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-        print('$ad onAdFailedToShowFullScreenContent: $error');
-        ad.dispose();
-        _createInterstitialAd();
-      },
-    );
-    _interstitialAd!.show();
-    _interstitialAd = null;
-  }
-  void _createInterstitialAd() {
-    InterstitialAd.load(
-        adUnitId: Platform.isAndroid
-            ? 'ca-app-pub-3940256099942544/1033173712'
-            : 'ca-app-pub-3940256099942544/4411468910',
-        request: request,
-        adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (InterstitialAd ad) {
-            print('$ad loaded');
-            _interstitialAd = ad;
-            _numInterstitialLoadAttempts = 0;
-            _interstitialAd!.setImmersiveMode(true);
-          },
-          onAdFailedToLoad: (LoadAdError error) {
-            print('InterstitialAd failed to load: $error.');
-            _numInterstitialLoadAttempts += 1;
-            _interstitialAd = null;
-            if (_numInterstitialLoadAttempts < maxFailedLoadAttempts) {
-              _createInterstitialAd();
-            }
-          },
-        ));
-  }
-
-  @override
-  void initState() {
-    super.initState();
-   // _showInterstitialAd();
-    //_createInterstitialAd();
-    createInterstitialAdAdmob();
-  }
   InterstitialAd? interstitialAdAdmob;
   bool? _interstitialAdEnabled = true;
   bool? get interstitialAdEnabled => _interstitialAdEnabled;
@@ -110,7 +40,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
 
   void createInterstitialAdAdmob() {
     InterstitialAd.load(
-        adUnitId: "ca-app-pub-3940256099942544/1033173712",
+        adUnitId: "ca-app-pub-9359300919229462/4970629149",
         request: AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
@@ -127,6 +57,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
         ));
   }
 
+
   void showInterstitialAdAdmob() {
     if(interstitialAdAdmob != null){
 
@@ -137,6 +68,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
           ad.dispose();
           interstitialAdAdmob = null;
           _isAdLoaded = false;
+          _decreasePoints();
         },
         onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
           print('$ad onAdFailedToShowFullScreenContent: $error');
@@ -148,6 +80,52 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
       interstitialAdAdmob!.show();
       interstitialAdAdmob = null;
     }
+  }
+
+  //enbale only one
+  void loadAds (){
+    createInterstitialAdAdmob();  //admob
+    //createInterstitialAdFb(); //fb
+  }
+  _decreasePoints() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int points = (prefs.getInt('points') ?? 20);
+
+    if (points == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Points already at 0!'),
+        ),
+      );
+      return; // No need to proceed further
+    }
+
+    points--;
+
+    await prefs.setInt('points', points);
+
+    if (points == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Points decreased to 0!'),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Points decreased!'),
+        ),
+      );
+    }
+  }
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    loadAds();
+
   }
 
   void _shareApp() {

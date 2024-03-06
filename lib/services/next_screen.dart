@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-void nextScreen(context, page) {
-  Navigator.push(
+Future<void> nextScreen(BuildContext context, Widget page) async {
+  await Navigator.push(
     context,
     PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => page,

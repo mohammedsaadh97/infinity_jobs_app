@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:infinityjobs_app/screens/splash_screen.dart';
+import 'package:infinityjobs_app/screens/test.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: SplashScreenView()
-     //   home: ProfileScreen("","")
+    //    home: PointSystem()
     );
   }
 }

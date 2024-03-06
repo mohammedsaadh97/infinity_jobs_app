@@ -43,5 +43,10 @@ class Config {
   // no Data found
   final String noDataFound = 'assets/jsons/nodatafound.json';
 
+  //loading
+  final String adsLoading = 'assets/jsons/adsloading.json';
+  final String pleaseWait = 'assets/jsons/pleasewait.json';
+
+
 
 }
