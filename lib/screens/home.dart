@@ -100,6 +100,8 @@ class _HomeState extends State<Home> {
   }
 
   Widget BuildHeader(BuildContext context){
+    print("check image");
+    print(_userImage);
     return Padding(
       padding: const EdgeInsets.only(top: 10.0,left: 20.0,right: 20.0),
       child: Row(
@@ -112,7 +114,7 @@ class _HomeState extends State<Home> {
                 child: SizedBox.fromSize(
                   size: Size.fromRadius(30), // Image radius
                   child: _userImage == null
-                      ? Center(child: CircularProgressIndicator(color: ColorConstant.AppGreencolor,)) // Display CircularProgressIndicator if _profileImage is null
+                      ?  Image.network("https://i.postimg.cc/mD1sKvZ9/no-image-profile.png", fit: BoxFit.cover)
                       : Image.network(_userImage!, fit: BoxFit.cover),
                 ),
               ),

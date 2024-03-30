@@ -166,12 +166,17 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         color: Colors.white),
                   ),
                   SizedBox(height: 5.0,),
-                  Text(
-                    _userJobTitle?.toUpperCase() ??
-                        "Software Developer".toUpperCase(),
-                    style: TextStyle(
-                        fontSize: 17.0,
-                        color: Colors.grey),
+                  SizedBox(
+                    width: 150,
+                    child: Text(
+                      _userJobTitle?.toUpperCase() ??
+                          "Software Developer".toUpperCase(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontSize: 17.0,
+                          color: Colors.grey),
+                    ),
                   ),
                 ],
               ),

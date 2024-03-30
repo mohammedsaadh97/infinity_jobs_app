@@ -261,10 +261,11 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
               icon: FontAwesomeIcons.businessTime,
               text:  widget.searchData.jobPosted ?? "",
             ): Container(),
-            IconRowDetailsWidget(
+            widget.searchData.jobType != null
+             ? IconRowDetailsWidget(
               icon: FontAwesomeIcons.briefcase,
-              text:   widget.searchData.jobType!,
-            ),
+              text:   widget.searchData.jobType ?? "",
+            ) : Container()
           ],
         )
 

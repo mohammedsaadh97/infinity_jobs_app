@@ -87,6 +87,7 @@ class _RewardPointsScreenState extends State<RewardPointsScreen> {
       SnackBarHelper.showSucessSnackBar(
           context, "Points increased by 2!");
     });
+    _loadAd();
 
   }
 

@@ -82,7 +82,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         await ref.putFile(_image!);
         return await ref.getDownloadURL();
       }
-      return '';
+      return 'https://i.postimg.cc/mD1sKvZ9/no-image-profile.png';
     } catch (e) {
       throw Exception('Failed to upload image: $e');
     }
